@@ -1,12 +1,10 @@
 package com.bradychiu.collections;
 
-@SuppressWarnings("WeakerAccess")
 public class LinkedList<T> {
 
     private Node<T> root;
 
-    @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
-    public T add(T value) {
+    T add(T value) {
         if (root != null) {
             root.add(value);
         } else {
@@ -15,8 +13,7 @@ public class LinkedList<T> {
         return value;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public T get(int index) throws IndexOutOfBoundsException {
+    T get(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index == 0 && root == null) {
             throw new IndexOutOfBoundsException("D:");
         }

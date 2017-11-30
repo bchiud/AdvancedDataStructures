@@ -2,55 +2,174 @@ package com.bradychiu.collections;
 
 import com.sun.istack.internal.Nullable;
 
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-public class CustomHashMap {
+public class CustomHashMap<K, V> {
 
-    private int hashKey = 4;
-    private LinkedList[] values;
+    private int capacity;
+    private Entry<K,V>[] values; // an arraylist must be used b/c an array can't have generics
 
-    public CustomHashMap(@Nullable int hashKey) {
-        if(hashKey != 4) this.hashKey = hashKey;
-        values = new LinkedList[4];
-        Map m = new HashMap();
-        m.put(1, 2);
-        Set<Entry<String,String>> s =  m.entrySet();
-        for (Entry<?,?> e : s) {
-            ((String)e.key).substring(0,1);
-            // e.value;
-        }
+    public static void main(String[] args) {
+        CustomHashMap chm = new CustomHashMap<Integer, String>();
+        chm.put(4, "test1");
     }
 
-    public class Entry<K, V> {
+    class Entry<K, V> {
         K key;
         V value;
-        Entry next;
+        Entry<K,V> next;
 
-        public Entry(K key, V value, Entry next) {
+        public Entry(K key, V value, Entry<K, V> next) {
             this.key = key;
             this.value = value;
             this.next = next;
         }
     }
 
-
-    public void put(int newKey, String newValue) {
-        int hashValue = hash(newKey);
+    public CustomHashMap() {
+        this(4);
     }
 
-    public String get(int retrieveKey) {
-        return "asdf";
+    public CustomHashMap(int capacity) {
+        this.capacity = capacity;
+        values = new Entry[capacity];
     }
 
-    public boolean remove(int deleteKey) {
-        return true;
+    public void put(K key, V value) {
+        Entry<K, V> newEntry = new Entry(key, value, null);
+        int hashKey = hash(key);
+        if(values[hashKey] == null) { // no linkedlist in bucket yet
+            values[hashKey] = newEntry;
+        } else {
+            Entry<K, V> previous = null;
+            Entry<K, V> current = values[hashKey];
+            while(current != null) {
+                if(current.key.equals(key)) {
+                    newEntry.next = current.next;
+                    if(previous == null) { // first node
+                        values[hashKey] = newEntry;
+                    } else {
+                        previous.next = newEntry;
+                    }
+                    return;
+                }
+                previous = current;
+                current = current.next;
+            }
+            // key DNE yet
+            previous.next = newEntry;
+        }
     }
 
-    public void display() {
+    public V get(K key) {
+        Entry<K, V> previous = null;
+        Entry<K, V> current = values[hash(key)];
 
+        if(current == null) return null;
+
+        while(current != null) {
+            if(current.key.equals(key)) {
+                return current.value;
+            } else {
+                previous = current;
+                current = current.next;
+            }
+        }
+
+        return current.value;
     }
 
-    private int hash(int currentKey){
-        return currentKey % hashKey;
+    public boolean remove(K key) {
+        Entry<K, V> previous = null;
+        Entry<K, V> current = values[hash(key)];
+
+        if(current == null) return false;
+
+        while(current != null) {
+            if(current.key.equals(key)) {
+                if(previous == null) {
+                    values[hash(key)] = current.next;
+                    return true;
+                } else {
+                    previous.next = current.next;
+                    return true;
+                }
+            } else {
+                previous = current;
+                current = current.next;
+            }
+        }
+        return false;
+    }
+
+    public boolean remove(K key, V value) {
+        Entry<K, V> previous = null;
+        Entry<K, V> current = values[hash(key)];
+
+        if(current == null) return false;
+
+        while(current != null) {
+            if(current.key.equals(key) && current.value.equals(value)) {
+                if(previous == null) {
+                    values[hash(key)] = current.next;
+                    return true;
+                } else {
+                    previous.next = current.next;
+                    return true;
+                }
+            } else {
+                previous = current;
+                current = current.next;
+            }
+        }
+        return false;
+    }
+
+    public int size() {
+        int count = 0;
+        for(Entry<K, V> current : values) {
+            Entry<K, V> previous = null;
+            while(current != null) {
+                count++;
+                previous = current;
+                current = current.next;
+            }
+        }
+        return count;
+    }
+
+    public boolean containsKey(K key) {
+        for(Entry<K, V> current : values) {
+            Entry<K, V> previous = null;
+            while(current != null) {
+                if(current.key.equals(key)) {
+                    return true;
+                } else {
+                    previous = current;
+                    current = current.next;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean containsValue(V value) {
+        for(Entry<K, V> current : values) {
+            Entry<K, V> previous = null;
+            while(current != null) {
+                if(current.value.equals(value)) {
+                    return true;
+                } else {
+                    previous = current;
+                    current = current.next;
+                }
+            }
+        }
+        return false;
+    }
+
+    private int hash(K key){
+        return Math.abs(key.hashCode()) % capacity;
     }
 }
