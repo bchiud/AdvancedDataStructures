@@ -3,7 +3,7 @@ package com.bradychiu.collections;
 public class Main {
     /*
     Array
-    List, Stack, Queue
+    List, Map, Stack, Queue
     Tree
     HashMap
     Priority Queue
