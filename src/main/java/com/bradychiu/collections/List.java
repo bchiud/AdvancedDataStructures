@@ -7,17 +7,10 @@ public class List<T> {
 
     private int size = 0;
     private static final int DEFAULT_CAPACITY = 10;
-    private Object elements[];
-
-    public List() {
-        // TODO: why can't this be new T[DEFAULT_CAPACITY];
-        elements = new Object[DEFAULT_CAPACITY];
-    }
+    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];;
 
     public void add(T t) {
-        if(size == elements.length) {
-            elements = Arrays.copyOf(elements, size + 1);
-        }
+        ensureCapacity();
         elements[size++] = t;
     }
 
@@ -64,9 +57,10 @@ public class List<T> {
     }
 
     private void withinBounds(int i) {
-        if(i >= size || i < 0) {
-            throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
-        }
+        if(i >= size || i < 0) throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + size);
     }
 
+    private void ensureCapacity() {
+        if(size == elements.length) elements = Arrays.copyOf(elements, size * 2);
+    }
 }

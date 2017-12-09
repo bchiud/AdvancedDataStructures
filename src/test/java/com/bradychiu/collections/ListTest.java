@@ -2,6 +2,8 @@ package com.bradychiu.collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
@@ -10,8 +12,8 @@ public class ListTest {
 
     private static List<String> i;
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         i = new List<>();
         i.add("a");
         i.add("b");
@@ -37,7 +39,7 @@ public class ListTest {
 
     @Test
     public void testGet() {
-        assertEquals(i.get(2), "c");
+        assertEquals("c", i.get(2));
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
