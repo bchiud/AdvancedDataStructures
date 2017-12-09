@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Map<K,V> {
-    // TODO: create map
-
     private int size = 0;
     private static final int DEFAULT_CAPACITY = 10;
     private Entry<K,V>[] elements = new Entry[DEFAULT_CAPACITY];
