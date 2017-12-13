@@ -6,8 +6,7 @@ import java.util.NoSuchElementException;
 public class QueueArray<T> {
 
     private int size = 0, first = 0, last = 0;
-    private static final int DEFAULT_CAPACITY = 2;
-    private T[] elements;
+    private T[] elements = (T[]) new Object[2];
 
     public boolean isEmpty() {
         return size == 0;
