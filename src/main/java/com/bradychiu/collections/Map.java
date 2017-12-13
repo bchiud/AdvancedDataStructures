@@ -37,7 +37,7 @@ public class Map<K,V> {
                 for(int j = i; j < size - 1; j++) {
                     elements[j] = elements[j+1];
                 }
-                size--;
+                elements[size--] = null;
                 return;
             }
         }
